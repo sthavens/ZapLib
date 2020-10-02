@@ -62,7 +62,7 @@ static int check_frontend (int fe_fd, const int interval_us, StatusReceiver stat
 		usleep(interval_us);
         counter++;
 	}
-    if(counter > 5){
+    if(counter >= 5){
         statusReceiver(0x20, 0, 0, 255, 0, 0);
         return -1;
     }
