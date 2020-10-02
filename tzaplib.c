@@ -348,7 +348,7 @@ int tzap_tune_silent(t_tuner_descriptor tuner, t_dvbt_tune_info tune_info,
     if ((video_fd = open(DEMUX_DEV, O_RDWR)) < 0)
         return -1;
 
-	if (set_pesfilter (video_fd, tune_info.vpid, DMX_PES_VIDEO, dvr) < 0)
+    if (set_pesfilter (video_fd, tune_info.vpid, DMX_PES_VIDEO, dvr) < 0)
 		return -1;
 
 	if ((audio_fd = open(DEMUX_DEV, O_RDWR)) < 0)

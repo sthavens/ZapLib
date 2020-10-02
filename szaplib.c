@@ -276,26 +276,26 @@ int zap_to(t_tuner_descriptor tuner,
 
    if (diseqc(fefd, sat_no, pol, hiband))
       if (do_tune(fefd, ifreq, sr))
-	 if (set_pesfilter(dmxfdv, vpid, DMX_PES_VIDEO, dvr))
-	    if (audiofd >= 0)
-	       (void)ioctl(audiofd, AUDIO_SET_BYPASS_MODE, bypass);
-	    if (set_pesfilter(dmxfda, apid, DMX_PES_AUDIO, dvr)) {
-	       if (rec_psi) {
-	          pmtpid = get_pmt_pid(dmxdev, sid);
-		  if (pmtpid < 0) {
-		     result = FALSE;
-		  }
-		  if (pmtpid == 0) {
-		     //fprintf(stderr,"couldn't find pmt-pid for sid %04x\n",sid);
-		     result = FALSE;
-		  }
-		  if (set_pesfilter(patfd, 0, DMX_PES_OTHER, dvr))
-	             if (set_pesfilter(pmtfd, pmtpid, DMX_PES_OTHER, dvr))
-	                result = TRUE;
-	          } else {
-		    result = TRUE;
-		  }
-	       }
+	    if (set_pesfilter(dmxfdv, vpid, DMX_PES_VIDEO, dvr))
+            if (audiofd >= 0)
+                (void)ioctl(audiofd, AUDIO_SET_BYPASS_MODE, bypass);
+    if (set_pesfilter(dmxfda, apid, DMX_PES_AUDIO, dvr)) {
+        if (rec_psi) {
+            pmtpid = get_pmt_pid(dmxdev, sid);
+        if (pmtpid < 0) {
+            result = FALSE;
+        }
+        if (pmtpid == 0) {
+            //fprintf(stderr,"couldn't find pmt-pid for sid %04x\n",sid);
+            result = FALSE;
+        }
+        if (set_pesfilter(patfd, 0, DMX_PES_OTHER, dvr))
+                if (set_pesfilter(pmtfd, pmtpid, DMX_PES_OTHER, dvr))
+                    result = TRUE;
+            } else {
+            result = TRUE;
+        }
+    }
 
     check_frontend (fefd, dvr, interval_us, statusReceiver);
 
