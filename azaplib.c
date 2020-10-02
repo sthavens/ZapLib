@@ -45,8 +45,9 @@ static int check_frontend (int fe_fd, const int interval_us, StatusReceiver stat
 	uint16_t snr, signal_strength;
 	uint32_t ber, uncorrected_blocks;
     int is_locked;
+    int counter = 0;
 
-	while(azap_break_tune == 0) {
+	while(azap_break_tune == 0 && counter < 5) {
 		ioctl(fe_fd, FE_READ_STATUS, &status);
 		ioctl(fe_fd, FE_READ_SIGNAL_STRENGTH, &signal_strength);
 		ioctl(fe_fd, FE_READ_SNR, &snr);
@@ -59,7 +60,12 @@ static int check_frontend (int fe_fd, const int interval_us, StatusReceiver stat
             break;
 
 		usleep(interval_us);
+        counter++;
 	}
+    if(counter > 5){
+        statusReceiver(0x20, 0, 0, 255, 0, 0);
+        return -1;
+    }
 
 	return 0;
 }
@@ -256,7 +262,10 @@ int azap_tune_silent(t_tuner_descriptor tuner, t_atsc_tune_info tune_info,
     }
 
     syslog(LOG_DEBUG, "Entering tune-loop.");
-	check_frontend (fd_state.frontend, status_interval_us, statusReceiver);
+    int frontend_status;
+	frontend_status = check_frontend (fd_state.frontend, status_interval_us, statusReceiver);
+    if(frontend_status != -1)
+        return -13;
     syslog(LOG_DEBUG, "Tune-loop has exited.");
 
     cleanup_fd(&fd_state);
